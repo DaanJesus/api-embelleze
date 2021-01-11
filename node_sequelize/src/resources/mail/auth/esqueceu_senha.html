@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+
+<style>
+    body {
+        width: 1080px;
+        height: 720px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image: linear-gradient(#FBBBAC, #FFFFFF);
+        background-repeat: no-repeat;
+    }
+
+    .cont {
+        overflow: hidden;
+        width: 300px;
+        height: 400px;
+        position: absolute;
+        top: 50%;
+        margin-top: -160px;
+        left: 50%;
+        margin-left: -100px;
+        background: rgb(247, 246, 242);
+        box-shadow: 0 15px 15px rgba(0, 0, 0, 0.40);
+        border-radius: 25px;
+    }
+
+    .form {
+        position: relative;
+        width: 100%;
+        max-width: 200px;
+        height: 100%;
+        padding: 35px;
+    }
+
+    img {
+        position: absolute;
+        top: 50%;
+        margin-top: -310px;
+        left: 50%;
+        width: 80px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    h2 {
+        position: absolute;
+        top: 50%;
+        margin-top: -220px;
+        left: 50%;
+        margin-left: -75px;
+        width: 240px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        width: 100%;
+        margin: 25px auto 0;
+        text-align: center;
+    }
+
+    .custom_field {
+        position: relative;
+        font-size: 14px;
+        padding-top: 20px;
+        margin-bottom: 5px;
+    }
+
+    .custom_field input {
+        border: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        -ms-appearance: none;
+        appearance: none;
+        background: #f2f2f2;
+        padding: 12px;
+        border-radius: 3px;
+        width: 100%;
+        outline: none;
+        font-size: 14px;
+        border: 1px solid #222;
+        ;
+    }
+
+    .custom_field .placeholder {
+        position: absolute;
+        left: 12px;
+        top: calc(50% + 10px);
+        transform: translateY(-50%);
+        transition:
+            top 0.3s ease,
+            font-size 0.3s ease,
+            color 0.3s ease;
+    }
+
+    .custom_field input:focus+.placeholder,
+    .custom_field input:valid+.placeholder {
+        top: 10px;
+        font-size: 10px;
+        color: #222;
+    }
+
+    button {
+        margin: 0 auto;
+        display: block;
+        width: 200px;
+        height: 36px;
+        border-radius: 30px;
+        font-size: 15px;
+        cursor: pointer;
+        margin-top: 30px;
+    }
+</style>
+
+<body>
+
+    <img src="../assets/16363.png" />
+
+    <h2> Alterar Senha</h2>
+
+    <div class="cont">
+
+        <div class="form sing-in">
+
+
+            <label class="custom_field">
+                <input type="email" name="email">
+                <span class="placeholder">Email</span>
+            </label>
+
+            <label class="custom_field">
+                <input type="password" name="senha">
+                <span class="placeholder">Senha</span>
+            </label>
+
+            <button>Enviar</button>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+
+<script>
+
+</script>

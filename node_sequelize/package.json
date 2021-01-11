@@ -16,7 +16,7 @@
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.3",
-    "mongoose": "^5.11.10",
+    "mongoose": "^5.11.11",
     "nodemailer": "^6.4.17",
     "nodemailer-express-handlebars": "^4.0.0",
     "nodemailer-smtp-transport": "^2.7.4",

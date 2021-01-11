@@ -1,9 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 
-
-const URL_MONGO = "mongodb+srv://forSale2021:forSale2021@forsaledatabase.ukynm.mongodb.net/test";
-
 const options = {
     autoIndex: true,
     reconectTries: Number.MAX_VALUE,
@@ -20,12 +17,12 @@ mongoose.disconnect();
 mongoose.Promise = require('bluebird');
 
 const connectWithRetry = () => {
-    mongoose.connect(URL_MONGO, options).then(
+    mongoose.connect(process.env.URL_MONGO, options).then(
         () => {
-            console.log("Success connect to: " + URL_MONGO);
+            console.log("Success connect to: forSaleDatabase");
         },
         err => {
-            console.log("Error connect to: " + URL_MONGO + ' - ' + err);
+            console.log("Error connect to: forSaleDatabase" + err);
         }
     );
 }

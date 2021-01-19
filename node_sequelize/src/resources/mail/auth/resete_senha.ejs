@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en-US" ng-app="Todo">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<style>
+    body {
+        width: 1080px;
+        height: 720px;
+        max-width: 200px;
+        align-items: center;
+        justify-content: center;
+        background-image: linear-gradient(#FBBBAC, #FFFFFF);
+        background-repeat: no-repeat;
+    }
+
+    .cont {
+        width: 250px;
+        height: 340px;
+        position: absolute;
+        padding: 35px 30px 0px 20px;
+        top: 50%;
+        margin-top: -160px;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        left: 50%;
+        margin-left: -100px;
+        background: #ffffff;
+        box-shadow: 0 15px 15px rgba(0, 0, 0, 0.40);
+        border-radius: 10px;
+    }
+
+    img {
+        position: absolute;
+        top: 50%;
+        margin-top: -310px;
+        left: 50%;
+        width: 80px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    h2 {
+        position: absolute;
+        top: 50%;
+        margin-top: -220px;
+        left: 50%;
+        margin-left: -75px;
+        width: 240px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    button {
+        width: 120px;
+        height: 36px;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+        margin-top: 20px;
+        background: #FBBBAC;
+    }
+
+    .error {
+        margin-top: 20px;
+        display: block;
+        color: black;
+        /* margin-bottom: -10px; */
+    }
+
+    .custom_field {
+        position: relative;
+        padding-top: 13px;
+    }
+
+    .custom_field input {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        border: 0;
+        border: 1px solid rgb(175, 175, 175);
+        outline: none;
+        width: 100%;
+        padding-left: 10px;
+        height: 40px;
+        min-width: 180px;
+        font-size: 16px;
+        transition: all .3s ease-out;
+        -webkit-transition: all .3s ease-out;
+        -moz-transition: all .3s ease-out;
+        -webkit-appearance: none;
+        border-radius: 5px;
+    }
+
+    .custom_field input:focus {
+        border: 2px solid #FBBBAC;
+    }
+
+
+    .custom_field label {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: rgb(255, 255, 255);
+        pointer-events: none;
+        position: absolute;
+        width: auto;
+        top: 0;
+        left: 0;
+        margin-top: 25px;
+        margin-left: 6px;
+        transition: all .3s ease-out;
+        -webkit-transition: all .3s ease-out;
+        -moz-transition: all .3s ease-out;
+    }
+
+    .custom_field input:required:invalid+label {
+        color: rgb(235, 64, 64);
+    }
+
+    .custom_field input:focus:required:invalid {
+        border: 1px solid rgb(235, 64, 64);
+    }
+
+    .custom_field input:required:invalid+label:before {
+        content: '*';
+    }
+
+    .custom_field input:focus+label,
+    .custom_field input:not(:placeholder-shown)+label {
+        font-size: 15px;
+        margin-top: 0;
+        color: #181818;
+    }
+
+    .line {
+        margin-top: 15px;
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-radius: 15px;
+        background-color: #FBBBAC;
+    }
+
+    .load .line:nth-last-child(1) {
+        animation: loadingC 0.6s 0.1s linear infinite;
+    }
+
+    .load .line:nth-last-child(2) {
+        animation: loadingC 0.6s 0.2s linear infinite;
+    }
+
+    .load .line:nth-last-child(3) {
+        animation: loadingC 0.6s 0.3s linear infinite;
+    }
+
+    @keyframes loadingC {
+        0% {
+            transform: translate(0, 0);
+        }
+
+        50% {
+            transform: translate(0, 15px);
+        }
+
+        100% {
+            transform: translate(0, 0);
+        }
+    }
+</style>
+
+<body>
+
+    <img src="https://image.flaticon.com/icons/png/512/44/44948.png"/>
+    <h2> Alterar Senha</h2>
+
+    <div class="cont">
+
+        <div class="custom_field">
+            <input type="text" id="email" placeholder=" " required />
+            <label>Email: </label>
+        </div>
+        <br />
+        <div class="custom_field">
+            <input type="password" id="senha" placeholder=" " required />
+            <label>Nova Senha: </label>
+        </div>
+        <br />
+        <div class="custom_field">
+            <input type="text" id="token" placeholder=" " required />
+            <label>Token</label>
+        </div>
+
+        <div id="load" class="load">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        <p class="error" id="error"></p>
+
+        <button id="button" onclick="sendChangePassword()">Enviar</button>
+
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    
+    function setVisible(selector, visible) {
+        document.querySelector(selector).style.display = visible ? 'block' : 'none';
+    }
+
+    setVisible('#load', false);
+
+    document.getElementById("error").style.display = "none";
+    var url = "http://localhost:8080/auth/resete_senha";
+
+    function sendChangePassword() {
+        setVisible('#load', true);
+
+        document.getElementById("button").style.display = "none";
+
+        var email = document.getElementById("email").value;
+        var senha = document.getElementById("senha").value;
+        var token = document.getElementById("token").value;
+
+        try {
+
+            fetch(url, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'post',
+                    body: JSON.stringify({
+                        email: email,
+                        senha: senha,
+                        token: token
+                    })
+                })
+                .then((response) =>
+                    response.json()
+                ).then((error) => {
+                    setVisible('#load', false);
+
+                    if (error.error != "Senha alterada com sucesso") {
+                        document.getElementById("button").style.display = "block";
+                        document.getElementById("button").style.marginLeft = "65px";
+
+                    }
+
+                    document.getElementById("error").style.display = "block";
+                    document.getElementById("error").textContent = error.error;
+                })
+
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
+</script>

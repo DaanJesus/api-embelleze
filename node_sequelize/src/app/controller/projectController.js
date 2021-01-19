@@ -1,27 +1,32 @@
+//imports
 const express = require('express');
+//modules
 const authMiddleware = require('../middleware/auth');
-const Marca = require('../models/marca');
 const Item = require('../models/item');
+const multer = require('multer');
+const multerConfig = require('../../config/multer');
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
-
 /* 
     List
 */
-router.get('/', async (req, res) => {
+router.get('/itens', async (req, res) => {
 
     try {
 
-        const marca = await Marca.find()
-            .populate('itens');
+        const item = await Item.find()
 
-        return res.send({ marca })
+        console.log({item: item});
+
+        return res.status(200).json({item: item})
 
     } catch (err) {
-        return res.status(400).send({ error: 'Erro ao carregar marcas' })
+        return res.status(400).send({
+            error: 'Erro ao carregar items'
+        });
     }
 });
 
@@ -29,15 +34,20 @@ router.get('/', async (req, res) => {
     Show
 */
 
-router.get('/:marcaId', async (req, res) => {
+router.get('/item/:itemId', async (req, res) => {
     try {
 
-        const marca = await Marca.findById(req.params.marcaId);
+        const item = await Item.findById(req.params.itemId);
 
-        return res.send({ marca })
+        return res.send({
+            item
+        })
 
     } catch (err) {
-        return res.status(400).send({ error: 'Erro ao carregar marca' })
+        console.log(err);
+        return res.status(400).send({
+            error: 'Erro ao carregar item'
+        })
     }
 
 });
@@ -45,27 +55,48 @@ router.get('/:marcaId', async (req, res) => {
 /* 
     Create
 */
-router.post('/', async (req, res) => {
+router.post('/cadastrar_item', multer(multerConfig).single('file'), async (req, res) => {
 
     try {
+        const {
+            originalname: nome_file,
+            size,
+            key,
+            location: url = ""
+        } = req.file;
 
-        const { nome, itens } = req.body;
+        const {
+            nome,
+            tipo,
+            quantidade,
+            valor,
+            estoque,
+            marca,
+            promocional
+        } = req.body
 
-        const marca = await Marca.create({ nome });
+        const item = await Item.create({
+            nome,
+            tipo,
+            quantidade,
+            valor,
+            estoque,
+            marca,
+            promocional,
+            image: {
+                nome_file,
+                size,
+                key,
+                url
+            }
+        });
 
-        await Promise.all(itens.map(async item => {
-            const itemMarca = new Item({ ...item, marca: marca._id });
-
-            await itemMarca.save();
-            marca.itens.push(itemMarca);
-        }));
-
-        await marca.save();
-
-        return res.send({ marca });
+        res.json(item)
 
     } catch (err) {
-        return res.status(400).send({ error: 'Erro ao cadastrar marca' });
+        return res.status(400).send({
+            error: 'Erro ao cadastrar item'
+        });
     }
 
 });
@@ -73,32 +104,36 @@ router.post('/', async (req, res) => {
 /* 
     Update
 */
-router.put('/:marcaId', async (req, res) => {
+router.put('/atualizar_item/:itemId', async (req, res) => {
+
+    const {
+        nome,
+        tipo,
+        quantidade,
+        valor,
+        estoque,
+        marca,
+        promocional
+    } = req.body
 
     try {
 
-        const { nome, itens } = req.body;
+        const item = await Item.findByIdAndUpdate(req.params.itemId, {
+            nome,
+            tipo,
+            quantidade,
+            valor,
+            estoque,
+            marca,
+            promocional
+        });
 
-        const marca = await Marca.findByIdAndUpdate(req.params.marcaId, {
-            nome
-        }, { new: true });
-
-        marca.itens = [];
-        await Item.remove({ marca: marca._id })
-
-        await Promise.all(itens.map(async item => {
-            const itemMarca = new Item({ ...item, marca: marca._id });
-
-            await itemMarca.save();
-            marca.itens.push(itemMarca);
-        }));
-
-        await marca.save();
-
-        return res.send({ marca });
+        res.json(item)
 
     } catch (err) {
-        return res.status(400).send({ error: 'Erro ao cadastrar marca' });
+        return res.status(400).send({
+            error: `Erro ao atualizar o item ${nome}`
+        });
     }
 
 });
@@ -106,17 +141,23 @@ router.put('/:marcaId', async (req, res) => {
 /* 
     Delete
 */
-router.delete('/:marcaId', async (req, res) => {
+router.delete('/delete_item/:itemId', async (req, res) => {
     try {
 
-        await Marca.findByIdAndRemove(req.params.marcaId);
+        const item = await Item.findById(req.params.itemId);
+        await item.remove();
 
-        return res.send()
+        return res.json({
+            message: `O item ${item.nome} foi deletado com sucesso`
+        })
 
     } catch (err) {
-        return res.status(400).send({ error: 'Erro ao deletar marca' })
+        console.log(err);
+        return res.status(400).send({
+            error: 'Erro ao deletar item'
+        })
     }
 
 });
 
-module.exports = app => app.use('/marcas', router);
+module.exports = app => app.use('/produtos', router);

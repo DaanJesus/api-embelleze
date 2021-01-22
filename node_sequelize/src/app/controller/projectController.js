@@ -13,15 +13,96 @@ router.use(authMiddleware);
 /* 
     List
 */
+router.get('/item/promocao', async (req, res) => {
+
+    try {
+
+        const item = await Item.find({promocional: true})
+
+        console.log({
+            item: item
+        });
+
+        return res.status(200).json({
+            item: item
+        })
+
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send({
+            error: 'Erro ao carregar items'
+        });
+    }
+});
+
+
+/* 
+    Get type
+*/
+
+router.get('/item/:type', async (req, res) => {
+
+    
+    try {
+        const type = req.params.type
+
+        const item = await Item.find({tipo: type})
+
+        console.log({
+            item: item
+        });
+
+        return res.status(200).json({
+            item: item
+        })
+
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send({
+            error: 'Erro ao carregar items'
+        });
+    }
+});
+
+/* 
+    Get Estoque
+*/
+
+router.get('/item/estoque', async (req, res) => {
+
+    try {
+
+        const item = await Item.find({estoque: true})
+
+        console.log({
+            item: item
+        });
+
+        return res.status(200).json({
+            item: item
+        })
+
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send({
+            error: 'Erro ao carregar items'
+        });
+    }
+});
+
+/* 
+    List
+*/
+
 router.get('/itens', async (req, res) => {
 
     try {
 
         const item = await Item.find()
 
-        console.log({item: item});
-
-        return res.status(200).json({item: item})
+        return res.status(200).json({
+            item: item
+        })
 
     } catch (err) {
         return res.status(400).send({

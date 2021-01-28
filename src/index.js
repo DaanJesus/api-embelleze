@@ -29,15 +29,15 @@ app.use('/files', express.static(path.resolve(__dirname, '..', 'tmp', 'uploads')
 app.set('view engine', 'ejs');
 
 app.get('/', async (req, res) => {
-    res.send("Hello")
-})
+    res.render("../app/views/resete_senha");
+});
 
 app.get('/resete_senha', async (req, res) => {
-    res.render("../resources/mail/auth/resete_senha");
+    res.render("../app/views/resete_senha");
 });
 
 app.get('/uploads', async (req, res) => {
-    res.render("../resources/mail/auth/upload_images");
+    res.render("../app/views/upload_images");
 });
 
 require('./app/controller/index')(app);

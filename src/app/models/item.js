@@ -1,4 +1,4 @@
-const mongoose = require('../../database');
+const mongoose = require('mongoose');
 const aws = require('aws-sdk')
 require('dotenv').config();
 const path = require('path')

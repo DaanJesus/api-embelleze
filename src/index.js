@@ -1,12 +1,21 @@
-require("dotenv").config();
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan')
 const path = require('path')
 const cors = require('cors')
-//const mongoose = require('./database/index')
+const mongoose = require('mongoose')
 
 const app = express();
+
+mongoose.connect(process.env.URL_MONGO).then(
+        () => {
+            console.log("Success connect to: forSaleDatabase");
+        },
+        err => {
+            console.log("Error connect to: forSaleDatabase" + err);
+        }
+    );
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -16,7 +25,6 @@ app.use(bodyParser.urlencoded({
 app.use(morgan("dev"));
 app.use('/files', express.static(path.resolve(__dirname, '..', 'tmp', 'uploads')));
 
-//mongoose.connect();
 
 app.set('view engine', 'ejs');
 

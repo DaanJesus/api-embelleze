@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const authConfig = require('../../config/auth.json');
 const crypto = require('crypto');
 const mailer = require('../../modules/mailer');
-const path = require('path');
 
 function generateToken(params = {}) {
     return jwt.sign(params, authConfig.secret, {

@@ -38,4 +38,4 @@ app.get('/uploads', async (req, res) => {
 
 require('./app/controller/index')(app);
 
-app.listen(8080);
+app.listen(process.env.PORT || 8080);

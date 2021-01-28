@@ -29,15 +29,15 @@ app.use('/files', express.static(path.resolve(__dirname, '..', 'tmp', 'uploads')
 app.set('view engine', 'ejs');
 
 app.get('/', async (req, res) => {
-    res.render("../app/views/resete_senha");
+    res.send("Swagger has not available");
 });
 
 app.get('/resete_senha', async (req, res) => {
-    res.render("../app/views/resete_senha");
+    res.render("../app/views/resete_senha.ejs");
 });
 
 app.get('/uploads', async (req, res) => {
-    res.render("../app/views/upload_images");
+    res.render("../app/views/upload_images.ejs");
 });
 
 require('./app/controller/index')(app);

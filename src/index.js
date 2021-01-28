@@ -28,6 +28,10 @@ app.use('/files', express.static(path.resolve(__dirname, '..', 'tmp', 'uploads')
 
 app.set('view engine', 'ejs');
 
+app.get('/', async (req, res) => {
+    res.send("Hello")
+})
+
 app.get('/resete_senha', async (req, res) => {
     res.render("../resources/mail/auth/resete_senha");
 });

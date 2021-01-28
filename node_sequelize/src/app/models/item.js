@@ -44,6 +44,10 @@ const ItemSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    descricao: {
+        type: String,
+        require: true
+    },
     marca: {
         type: String,
         require: true

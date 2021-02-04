@@ -33,8 +33,6 @@ router.post('/register', async (req, res) => {
 
         user.senha = undefined;
 
-        console.log("A merda do usuário ai", user);
-
         return res.json({
             user,
             token: generateToken({
@@ -44,6 +42,7 @@ router.post('/register', async (req, res) => {
 
 
     } catch (err) {
+        console.log(err);
         return res.status(400).json({
             error: 'Falha ao registrar usuário.'
         });
@@ -88,7 +87,7 @@ router.post('/authenticate', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-})
+});
 
 router.post('/esqueceu_senha', async (req, res) => {
     const {
@@ -122,7 +121,7 @@ router.post('/esqueceu_senha', async (req, res) => {
         await mailer.sendMail({
             to: email,
             from: 'danilo25oliveira@gmail.com',
-            template: 'auth/esqueceu_senha',
+            template: 'views/esqueceu_senha',
             subject: 'Alteração de senha',
             context: {
                 token
@@ -147,7 +146,7 @@ router.post('/esqueceu_senha', async (req, res) => {
             error: 'Erro ao tentar trocar a senha, tente novamente.'
         });
     }
-})
+});;
 
 router.post('/resete_senha', async (req, res) => {
 
@@ -200,6 +199,6 @@ router.post('/resete_senha', async (req, res) => {
         })
     }
 
-})
+});
 
 module.exports = app => app.use('/auth', router);

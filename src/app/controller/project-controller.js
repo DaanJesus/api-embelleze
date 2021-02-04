@@ -10,25 +10,19 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-/* 
-    List
-*/
 router.get('/item/promocao', async (req, res) => {
 
     try {
 
-        const item = await Item.find({promocional: true})
-
-        console.log({
-            item: item
-        });
+        const item = await Item.find({
+            promocional: true
+        })
 
         return res.status(200).json({
             item: item
         })
 
     } catch (err) {
-        console.log(err);
         return res.status(400).send({
             error: 'Erro ao carregar items'
         });
@@ -42,22 +36,19 @@ router.get('/item/promocao', async (req, res) => {
 
 router.get('/item/:type', async (req, res) => {
 
-    
+
     try {
         const type = req.params.type
 
-        const item = await Item.find({tipo: type})
-
-        console.log({
-            item: item
-        });
+        const item = await Item.find({
+            tipo: type
+        })
 
         return res.status(200).json({
             item: item
         })
 
     } catch (err) {
-        console.log(err);
         return res.status(400).send({
             error: 'Erro ao carregar items'
         });
@@ -72,18 +63,15 @@ router.get('/item/estoque', async (req, res) => {
 
     try {
 
-        const item = await Item.find({estoque: true})
-
-        console.log({
-            item: item
-        });
+        const item = await Item.find({
+            estoque: true
+        })
 
         return res.status(200).json({
             item: item
         })
 
     } catch (err) {
-        console.log(err);
         return res.status(400).send({
             error: 'Erro ao carregar items'
         });
@@ -125,7 +113,6 @@ router.get('/item/:itemId', async (req, res) => {
         })
 
     } catch (err) {
-        console.log(err);
         return res.status(400).send({
             error: 'Erro ao carregar item'
         })

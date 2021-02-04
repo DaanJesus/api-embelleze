@@ -1,0 +1,367 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "API Documentation",
+        "description": "Swagger feito para documentar as rotas da api",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "host": "localhost:5000",
+    "basePath": "",
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "security": [
+        {
+            "Bearer": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "User",
+            "description": "Api for users in the system"
+        }
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/auth/authenticate": {
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "body"
+                }
+            ],
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Autentica usuário",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "parameters": [
+                {
+                    "in": "body",
+                    "name": "body",
+                    "schema": {
+                        "$ref": "#/definitions/User"
+                    }
+                }
+            ],
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Cadastra usuário",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/esqueceu_senha": {
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true
+                }
+            ],
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Envia um email com um token para o usuário alterar a senha",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/resete_senha": {
+            "parameters": [
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true
+                }
+            ],
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Solicita token, email e nova senha para usuario",
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    }
+                }
+            }
+        },
+        "/produtos/itens": {
+            "get": {
+                "tags": [
+                    "Item"
+                ],
+                "summary": "Retorna lista de itens",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    }
+                }
+            }
+        },
+        "/produtos/item/promocao": {
+            "get": {
+                "tags": [
+                    "Item"
+                ],
+                "summary": "Retorna lista de itens na promoção",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    }
+                }
+            }
+        },
+        "/produtos/item/{tipo}": {
+            "parameters": [
+                {
+                    "name": "tipo",
+                    "in": "path",
+                    "required": true,
+                    "description": "Tipo do produto",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Item"
+                ],
+                "summary": "Retorna lista de itens por tipo",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    }
+                }
+            }
+        },
+        "/produtos/item/estoque": {
+            "get": {
+                "tags": [
+                    "Item"
+                ],
+                "summary": "Retorna lista de itens em estoque",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    }
+                }
+            }
+        },
+        "/produtos/cadastrar_item": {
+            "post": {
+                "tags": [
+                    "Item"
+                ],
+                "summary": "Cadastra um item",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    }
+                }
+            }
+        },
+        "/produtos/atualizar_item/:itemId": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "itemId",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "in": "body",
+                    "name": "itemId",
+                    "schema": {
+                        "$ref": "#/definitions/Item"
+                    }
+                }
+            ],
+            "put": {
+                "tags": [
+                    "Item"
+                ],
+                "summary": "Atualiza um item usando o ID como identificador",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    }
+                }
+            }
+        },
+        "/produtos/delete_item/{itemId}": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "itemId",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "delete": {
+                "tags": [
+                    "Item"
+                ],
+                "summary": "Deleta um item a partir do ID",
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "properties": {
+                "nome": {
+                    "type": "string"
+                },
+                "celular": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "senha": {
+                    "type": "string"
+                },
+                "cep": {
+                    "type": "string"
+                },
+                "bairro": {
+                    "type": "string"
+                },
+                "rua": {
+                    "type": "string"
+                },
+                "numero": {
+                    "type": "string"
+                }
+            }
+        },
+        "Item": {
+            "properties": {
+                "nome": {
+                    "type": "string"
+                },
+                "tipo": {
+                    "type": "string"
+                },
+                "quantidade": {
+                    "type": "number"
+                },
+                "valor": {
+                    "type": "number"
+                },
+                "estoque": {
+                    "type": "boolean"
+                },
+                "promocional": {
+                    "type": "boolean"
+                },
+                "linha": {
+                    "type": "string"
+                },
+                "capacidade": {
+                    "type": "string"
+                },
+                "descricao": {
+                    "type": "string"
+                },
+                "marca": {
+                    "type": "string"
+                },
+                "image": {
+                    "properties": {
+                        "nome_file": {
+                            "type": "string"
+                        },
+                        "size": {
+                            "type": "number"
+                        },
+                        "key": {
+                            "type": "string"
+                        },
+                        "url": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

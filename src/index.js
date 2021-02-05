@@ -46,7 +46,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/resete_senha', async (req, res) => {
-    res.render("../app/views/resete_senha");
+    res.render("/app/views/resete_senha");
 });
 
 app.get('/uploads', async (req, res) => {

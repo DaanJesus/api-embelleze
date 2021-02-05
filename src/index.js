@@ -7,7 +7,6 @@ const path = require('path');
 const cors = require('cors');
 const app = express();
 const swaggerUI = require('swagger-ui-express')
-const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerDocument = require('./swaager.json');
 
 const SERVER_PORT = Number(process.env.SERVER_PORT || 5000)
@@ -36,22 +35,22 @@ app.use(bodyParser.urlencoded({
 app.use(morgan("dev"));
 app.use('/files', express.static(path.resolve(__dirname, '..', 'tmp', 'uploads')));
 
+app.set('views', path.join(process.cwd() + '/views'));
 app.set('view engine', 'ejs');
+app.use(express.static(path.join(process.cwd() + '/public')));
 
 app.use(express.json());
-
 
 app.get('/', async (req, res) => {
     res.redirect('/api-docs')
 })
 
-
 app.get('/resete_senha', async (req, res) => {
-    res.render("./app/views/resete_senha");
+    res.render("../app/views/resete_senha");
 });
 
 app.get('/uploads', async (req, res) => {
-    res.render("./app/views/upload_images");
+    res.render("../app/views/upload_images");
 });
 
 require('./app/controller/index')(app);

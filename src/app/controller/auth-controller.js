@@ -6,20 +6,36 @@ const jwt = require('jsonwebtoken');
 const authConfig = require('../../config/auth.json');
 const crypto = require('crypto');
 const mailer = require('../../modules/mailer');
+const multerConfig = require('../../config/multer');
+const multer = require('multer');
 
 function generateToken(params = {}) {
     return jwt.sign(params, authConfig.secret, {
-        expiresIn: 86400
+        expiresIn: 84600
     })
 }
 
-router.post('/register', async (req, res) => {
-
-    const {
-        email
-    } = req.body;
+router.post('/register', multer(multerConfig).single('file'), async (req, res) => {
 
     try {
+
+        const {
+            originalname: nome_file,
+            size,
+            key,
+            location: url = ""
+        } = req.file;
+
+        const {
+            nome,
+            celular,
+            email,
+            senha,
+            cep,
+            bairro,
+            numero,
+            rua
+        } = req.body;
 
         if (await User.findOne({
                 email
@@ -29,7 +45,22 @@ router.post('/register', async (req, res) => {
             });
         }
 
-        const user = await User.create(req.body);
+        const user = await User.create({
+            nome,
+            celular,
+            email,
+            senha,
+            cep,
+            bairro,
+            numero,
+            rua,
+            image: {
+                nome_file,
+                size,
+                key,
+                url
+            }
+        });
 
         user.senha = undefined;
 
@@ -77,8 +108,7 @@ router.post('/authenticate', async (req, res) => {
         user.senha = undefined;
 
         res.status(200).json({
-            nome: user.nome,
-            email: user.email,
+            user: user,
             token: generateToken({
                 id: user._id
             })

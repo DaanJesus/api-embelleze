@@ -17,9 +17,9 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument, {
     explorer: true
 }))
 
-mongoose.connect(process.env.URL_MONGO).then(
+mongoose.connect(process.env.URL_MONGO, { useUnifiedTopology: true}).then(
     () => {
-        console.log("Success connect to: forSaleDatabase");
+        console.log("Success connect to: forSaleDatabase", host);
     },
     err => {
         console.log("Error connect to: forSaleDatabase" + err);
@@ -35,9 +35,7 @@ app.use(bodyParser.urlencoded({
 app.use(morgan("dev"));
 app.use('/files', express.static(path.resolve(__dirname, '..', 'tmp', 'uploads')));
 
-app.set('views', path.join(process.cwd() + '/views'));
 app.set('view engine', 'ejs');
-app.use(express.static(path.join(process.cwd() + '/public')));
 
 app.use(express.json());
 
@@ -46,7 +44,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/resete_senha', async (req, res) => {
-    res.render("/app/views/resete_senha");
+    res.render("../app/views/resete_senha");
 });
 
 app.get('/uploads', async (req, res) => {

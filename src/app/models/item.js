@@ -67,7 +67,7 @@ const ItemSchema = new mongoose.Schema({
 ItemSchema.pre("save", function () {
     //console.log("Chegou aqui", this.image.key);
     if (!this.image.url) {
-        this.image.url = `${process.env.APP_URL}/files/${this.image.key}`
+        this.image.url = `${process.env.IP_LOCAL}/files/${this.image.key}`
     }
 });
 

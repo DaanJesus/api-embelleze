@@ -125,6 +125,8 @@ router.get('/item/:itemId', async (req, res) => {
 */
 router.post('/cadastrar_item', multer(multerConfig).single('file'), async (req, res) => {
 
+    console.log(req.file, req.body);
+
     try {
         const {
             originalname: nome_file,
@@ -139,8 +141,11 @@ router.post('/cadastrar_item', multer(multerConfig).single('file'), async (req, 
             quantidade,
             valor,
             estoque,
+            promocional,
+            linha,
+            capacidade,
+            descricao,
             marca,
-            promocional
         } = req.body
 
         const item = await Item.create({
@@ -149,8 +154,11 @@ router.post('/cadastrar_item', multer(multerConfig).single('file'), async (req, 
             quantidade,
             valor,
             estoque,
-            marca,
             promocional,
+            linha,
+            capacidade,
+            descricao,
+            marca,
             image: {
                 nome_file,
                 size,
@@ -159,9 +167,10 @@ router.post('/cadastrar_item', multer(multerConfig).single('file'), async (req, 
             }
         });
 
-        res.json(item)
+        res.json({message: "Item cadastrado com sucesso"})
 
     } catch (err) {
+        console.log(err);
         return res.status(400).send({
             error: 'Erro ao cadastrar item'
         });

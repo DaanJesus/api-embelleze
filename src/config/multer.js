@@ -46,8 +46,10 @@ module.exports = {
         const allowedMimes = [
             'image/jpeg',
             'image/png',
-            'image/gif'
+            'image/jpg'
         ];
+
+        console.log(file);
 
         if (allowedMimes.includes(file.mimetype)) {
             cb(null, true);

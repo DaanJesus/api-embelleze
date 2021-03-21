@@ -3,10 +3,13 @@ const express = require('express');
 //modules
 const authMiddleware = require('../middleware/auth');
 const Item = require('../models/item');
+const Cart = require('../models/cart');
 const multer = require('multer');
 const multerConfig = require('../../config/multer');
 
 const router = express.Router();
+
+//const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 
 router.use(authMiddleware);
 
@@ -167,7 +170,9 @@ router.post('/cadastrar_item', multer(multerConfig).single('file'), async (req, 
             }
         });
 
-        res.json({message: "Item cadastrado com sucesso"})
+        res.json({
+            message: "Item cadastrado com sucesso"
+        })
 
     } catch (err) {
         console.log(err);

@@ -14,9 +14,7 @@ router.use(authMiddleware);
 /* 
     Buy
 */
-router.post('/creat/:user_id', async (req, res) => {
-
-    console.log(req.body);
+router.post('/create/:user_id', async (req, res) => {
 
     try {
 
@@ -26,14 +24,36 @@ router.post('/creat/:user_id', async (req, res) => {
 
         const body = req.body
 
-        const cart = await Cart.create({
-            ...body,
-            username: user_id
-        })
-        //await cart.populate("products").execPopulate();
+        let carrinho = {};
+
+        carrinho = await Cart.findOne({
+            user_id: user_id
+        });
+
+        if (carrinho == null) {
+
+            carrinho = await Cart.create({
+                    ...body,
+                    user_id: user_id
+                })
+                .populate("user_id")
+                .populate("products")
+
+        } else {
+
+            carrinho = await Cart.findOneAndUpdate({
+                    user_id: user_id
+                }, {
+                    ...body,
+                    user_id: user_id
+                })
+                .populate("user_id")
+                .populate("products")
+
+        }
 
         res.status(200).json({
-            cart,
+            carrinho,
             message: "Produto adicionado ao carrinho"
         })
 
@@ -56,13 +76,13 @@ router.get('/cart_user/:user_id', async (req, res) => {
             user_id
         } = req.params
 
-        const userCarts = await Cart.find({
-                username: user_id,
+        const userCarts = await Cart.findOne({
+                user_id: user_id,
                 status: false
             })
             .populate("products")
 
-        res.status(200).json(userCarts)
+        res.status(200).json({userCarts})
 
     } catch (err) {
         console.log(err);

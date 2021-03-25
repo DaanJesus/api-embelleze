@@ -7,9 +7,9 @@ const CartSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Item"
     }],
-    username: {
+    user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        required: "User"
+        ref: "User"
     },
     address: {
         cep: {

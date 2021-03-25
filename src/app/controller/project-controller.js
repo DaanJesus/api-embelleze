@@ -53,7 +53,7 @@ router.get('/item/:type', async (req, res) => {
 
     } catch (err) {
         return res.status(400).send({
-            error: 'Erro ao carregar items'
+            error: 'Erro ao carregar itens'
         });
     }
 });

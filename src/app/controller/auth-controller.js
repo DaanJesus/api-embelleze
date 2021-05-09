@@ -108,7 +108,7 @@ router.post('/authenticate', async (req, res) => {
         user.senha = undefined;
 
         res.status(200).json({
-            user: user,
+            user,
             token: generateToken({
                 id: user._id
             })

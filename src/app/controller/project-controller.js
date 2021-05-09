@@ -41,7 +41,7 @@ router.get('/item/:type', async (req, res) => {
 
 
     try {
-        const type = req.params.type
+        const { type } = req.params
 
         const item = await Item.find({
             tipo: type

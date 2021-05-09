@@ -1,9 +1,23 @@
+/**
+ * @description      : 
+ * @author           : Danilo
+ * @group            : 
+ * @created          : 03/05/2021 - 13:26:49
+ * 
+ * MODIFICATION LOG
+ * - Version         : 1.0.0
+ * - Date            : 03/05/2021
+ * - Author          : Danilo
+ * - Modification    : 
+ **/
 //imports
 const express = require('express');
 
 //modules
 const authMiddleware = require('../middleware/auth');
 const Cart = require('../models/cart');
+const Historic = require('../models/historic');
+const prettyFormat = require('pretty-format');
 
 const router = express.Router();
 
@@ -22,7 +36,21 @@ router.post('/create/:user_id', async (req, res) => {
             user_id
         } = req.params
 
-        const body = req.body
+        const {
+            cartItem,
+            address
+        } = req.body
+
+        console.log(prettyFormat(cartItem));
+
+        let itens = [];
+
+        cartItem.forEach(item => {
+            itens.push({
+                item: item.item._id,
+                quantity: item.quantity
+            })
+        });
 
         let carrinho = {};
 
@@ -33,42 +61,66 @@ router.post('/create/:user_id', async (req, res) => {
         if (carrinho == null) {
 
             carrinho = await Cart.create({
-                    ...body,
-                    user_id: user_id
-                })
-                .populate("user_id")
-                .populate("products")
+                cartItem: itens,
+                address: address,
+                user_id: user_id
+            })
+
+            await Historic.create({
+                cartItem: itens,
+                user_id: user_id
+            })
 
         } else {
 
-            carrinho = await Cart.findOneAndUpdate({
+            if (carrinho.cartItem.length > 0) {
+
+                carrinho = await Cart.findOneAndUpdate({
                     user_id: user_id
                 }, {
-                    ...body,
-                    user_id: user_id
+                    $push: {
+                        cartItem: itens
+                    },
+                    address: address
                 })
-                .populate("user_id")
-                .populate("products")
+
+                await Historic.findOneAndUpdate({
+                    user_id: user_id
+                }, {
+                    $push: {
+                        cartItem: itens
+                    }
+                })
+
+            } else {
+
+                carrinho = await Cart.findOneAndUpdate({
+                    user_id: user_id
+                }, {
+                    cartItem: itens
+                })
+
+                await Historic.findOneAndUpdate({
+                    user_id: user_id
+                }, {
+                    cartItem: itens
+                })
+            }
 
         }
 
-        res.status(200).json({
-            carrinho,
-            message: "Produto adicionado ao carrinho"
-        })
+        res.status(200).json("Pedido efetuado com sucesso.")
 
     } catch (err) {
         console.log(err);
         return res.status(400).send({
-            error: 'Erro ao adicionar item ao carrinho'
+            error: 'Erro ao finalizar pedido'
         });
     }
 
 });
 
 router.get('/cart_user/:user_id', async (req, res) => {
-
-    console.log(req.params);
 
     try {
 
@@ -77,12 +129,13 @@ router.get('/cart_user/:user_id', async (req, res) => {
         } = req.params
 
         const userCarts = await Cart.findOne({
-                user_id: user_id,
-                status: false
+                user_id: user_id
             })
-            .populate("products")
+            .populate("cartItem")
 
-        res.status(200).json({userCarts})
+        res.status(200).json({
+            userCarts
+        })
 
     } catch (err) {
         console.log(err);
@@ -93,24 +146,28 @@ router.get('/cart_user/:user_id', async (req, res) => {
 
 });
 
-router.put('/encerrar_pedido/:cart_id', async (req, res) => {
-
-    console.log(req.file, req.body);
+router.put('/encerrar_pedido/:id_user', async (req, res) => {
 
     try {
         const {
-            cart_id
+            id_user
         } = req.params
 
-        const cart = await Cart.findOneAndUpdate({
-            _id: cart_id
-        }, {
-            status: true
-        });
+        const {
+            item_id
+        } = req.body
 
-        res.json({
-            message: "Pedido finalizado com sucesso"
+        const cart = await Cart.findOneAndUpdate({
+            user_id: id_user
+        }, {
+            $pull: {
+                cartItem: {
+                    _id: item_id
+                }
+            }
         })
+
+        res.json(cart)
 
     } catch (err) {
         console.log(err);
@@ -125,7 +182,7 @@ router.get('/list', async (req, res) => {
 
     try {
 
-        const cart = await Cart.find();
+        const cart = await Cart.find().populate("user_id");
 
         res.json(cart)
 
@@ -133,6 +190,29 @@ router.get('/list', async (req, res) => {
         console.log(err);
         return res.status(400).send({
             error: 'Erro ao listar pedidos'
+        });
+    }
+
+});
+
+router.get('/historic/:id_user', async (req, res) => {
+
+    const {
+        id_user
+    } = req.params
+
+    try {
+
+        const cart = await Historic.findOne({
+            user_id: id_user
+        });
+
+        res.json(cart)
+
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send({
+            error: 'Erro ao listar histórico'
         });
     }
 

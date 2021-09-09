@@ -28,13 +28,15 @@ router.use(authMiddleware);
 /* 
     Buy
 */
-router.post('/create/:user_id', async (req, res) => {
+router.post('/create/:user', async (req, res) => {
 
     try {
 
         const {
-            user_id
+            user
         } = req.params
+
+        console.log(user);
 
         const {
             cartItem,
@@ -55,7 +57,7 @@ router.post('/create/:user_id', async (req, res) => {
         let carrinho = {};
 
         carrinho = await Cart.findOne({
-            user_id: user_id
+            user: user
         });
 
         if (carrinho == null) {
@@ -63,12 +65,12 @@ router.post('/create/:user_id', async (req, res) => {
             carrinho = await Cart.create({
                 cartItem: itens,
                 address: address,
-                user_id: user_id
+                user: user
             })
 
             await Historic.create({
                 cartItem: itens,
-                user_id: user_id
+                user: user
             })
 
         } else {
@@ -76,7 +78,7 @@ router.post('/create/:user_id', async (req, res) => {
             if (carrinho.cartItem.length > 0) {
 
                 carrinho = await Cart.findOneAndUpdate({
-                    user_id: user_id
+                    user: user
                 }, {
                     $push: {
                         cartItem: itens
@@ -85,7 +87,7 @@ router.post('/create/:user_id', async (req, res) => {
                 })
 
                 await Historic.findOneAndUpdate({
-                    user_id: user_id
+                    user: user
                 }, {
                     $push: {
                         cartItem: itens
@@ -95,13 +97,13 @@ router.post('/create/:user_id', async (req, res) => {
             } else {
 
                 carrinho = await Cart.findOneAndUpdate({
-                    user_id: user_id
+                    user: user
                 }, {
                     cartItem: itens
                 })
 
                 await Historic.findOneAndUpdate({
-                    user_id: user_id
+                    user: user
                 }, {
                     cartItem: itens
                 })
@@ -120,18 +122,18 @@ router.post('/create/:user_id', async (req, res) => {
 
 });
 
-router.get('/cart_user/:user_id', async (req, res) => {
+router.get('/cart_user/:user', async (req, res) => {
 
     try {
 
         const {
-            user_id
+            user
         } = req.params
 
         const userCarts = await Cart.findOne({
-                user_id: user_id
+                user: user
             })
-            .populate("cartItem")
+            .populate("cartItem.item")
 
         res.status(200).json({
             userCarts
@@ -158,7 +160,7 @@ router.put('/encerrar_pedido/:id_user', async (req, res) => {
         } = req.body
 
         const cart = await Cart.findOneAndUpdate({
-            user_id: id_user
+            user: id_user
         }, {
             $pull: {
                 cartItem: {
@@ -178,13 +180,17 @@ router.put('/encerrar_pedido/:id_user', async (req, res) => {
 
 });
 
-router.get('/list', async (req, res) => {
+router.get('/all', async (req, res) => {
 
     try {
 
-        const cart = await Cart.find().populate("user_id");
+        const cart = await Cart.find()
+            .populate("user")
+            .populate("cartItem.item")
 
-        res.json(cart)
+        res.status(200).json({
+            cart
+        })
 
     } catch (err) {
         console.log(err);
@@ -204,8 +210,10 @@ router.get('/historic/:id_user', async (req, res) => {
     try {
 
         const cart = await Historic.findOne({
-            user_id: id_user
-        });
+                user: id_user
+            })
+            .populate('cartItem.item')
+            .populate('user')
 
         res.json(cart)
 

@@ -11,11 +11,11 @@ const multer = require('multer');
 
 function generateToken(params = {}) {
     return jwt.sign(params, authConfig.secret, {
-        expiresIn: 84600
+        expiresIn: 86400
     })
 }
 
-router.post('/register', multer(multerConfig).single('file'), async (req, res) => {
+router.post('/register', multer(multerConfig).single('file'), async(req, res) => {
 
     try {
 
@@ -80,7 +80,7 @@ router.post('/register', multer(multerConfig).single('file'), async (req, res) =
     }
 });
 
-router.post('/authenticate', async (req, res) => {
+router.post('/authenticate', async(req, res) => {
 
     try {
 
@@ -119,7 +119,7 @@ router.post('/authenticate', async (req, res) => {
     }
 });
 
-router.post('/esqueceu_senha', async (req, res) => {
+router.post('/esqueceu_senha', async(req, res) => {
     const {
         email
     } = req.body;
@@ -178,7 +178,7 @@ router.post('/esqueceu_senha', async (req, res) => {
     }
 });;
 
-router.post('/resete_senha', async (req, res) => {
+router.post('/resete_senha', async(req, res) => {
 
     console.log(req.body);
 

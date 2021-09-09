@@ -16,7 +16,12 @@ require('dotenv').config();
 
 const HistoricSchema = new mongoose.Schema({
 
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
     cartItem: [{
+        
         item: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Item"
@@ -24,12 +29,7 @@ const HistoricSchema = new mongoose.Schema({
         quantity: {
             type: Number
         }
-    }],
-    user_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }
-
+    }]
 });
 
 const Historic = mongoose.model('Historic', HistoricSchema);

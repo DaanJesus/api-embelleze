@@ -36,6 +36,10 @@ const ItemSchema = new mongoose.Schema({
         require: true,
         default: false
     },
+    favorito: {
+        type: Boolean,
+        default: false
+    },
     linha: {
         type: String,
         require: true
@@ -51,6 +55,12 @@ const ItemSchema = new mongoose.Schema({
     marca: {
         type: String,
         require: true
+    },
+    avaliacao: {
+        total_vendido: Number,
+        total_avaliacoes: Number,
+        total_rating: Number,
+        media_rating: Number
     },
     image: {
         nome_file: String,

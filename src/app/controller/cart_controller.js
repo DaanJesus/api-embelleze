@@ -1,15 +1,3 @@
-/**
- * @description      : 
- * @author           : Danilo
- * @group            : 
- * @created          : 03/05/2021 - 13:26:49
- * 
- * MODIFICATION LOG
- * - Version         : 1.0.0
- * - Date            : 03/05/2021
- * - Author          : Danilo
- * - Modification    : 
- **/
 //imports
 const express = require('express');
 

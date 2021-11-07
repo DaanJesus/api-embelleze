@@ -17,7 +17,12 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument, {
     explorer: true
 }))
 
-mongoose.connect(process.env.URL_MONGO, { useUnifiedTopology: true}).then(
+mongoose.connect(process.env.URL_MONGO, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+}).then(
     () => {
         console.log("Success connect to: forSaleDatabase", host);
     },

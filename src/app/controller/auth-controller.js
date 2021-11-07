@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../../config/auth.json');
 const crypto = require('crypto');
-const mailer = require('../../modules/mailer');
 const multerConfig = require('../../config/multer');
 const multer = require('multer');
 
@@ -15,7 +14,7 @@ function generateToken(params = {}) {
     })
 }
 
-router.post('/register', multer(multerConfig).single('file'), async(req, res) => {
+router.post('/register', multer(multerConfig).single('file'), async (req, res) => {
 
     try {
 
@@ -38,8 +37,8 @@ router.post('/register', multer(multerConfig).single('file'), async(req, res) =>
         } = req.body;
 
         if (await User.findOne({
-                email
-            })) {
+            email
+        })) {
             return res.status(400).json({
                 error: 'Este e-mail ja foi utilizado.'
             });
@@ -80,7 +79,7 @@ router.post('/register', multer(multerConfig).single('file'), async(req, res) =>
     }
 });
 
-router.post('/authenticate', async(req, res) => {
+router.post('/authenticate', async (req, res) => {
 
     try {
 
@@ -117,118 +116,6 @@ router.post('/authenticate', async(req, res) => {
     } catch (err) {
         console.log(err);
     }
-});
-
-router.post('/esqueceu_senha', async(req, res) => {
-    const {
-        email
-    } = req.body;
-
-    try {
-
-        const user = await User.findOne({
-            email
-        });
-
-        if (!user) {
-            return res.status(400).json({
-                error: 'Usuário não encontrado.'
-            });
-        }
-
-        const token = crypto.randomBytes(20).toString('hex');
-
-        const now = new Date();
-        now.setHours(now.getHours() + 1);
-
-        await User.findByIdAndUpdate(user.id, {
-            '$set': {
-                tokenReseteSenha: token,
-                expiresReseteSenha: now
-            }
-        });
-
-        await mailer.sendMail({
-            to: email,
-            from: 'danilo25oliveira@gmail.com',
-            template: 'views/esqueceu_senha',
-            subject: 'Alteração de senha',
-            context: {
-                token
-            },
-        }, (err) => {
-            if (err) {
-                console.log(err);
-                return res.status(400).json({
-                    error: 'Não conseguimos enviar o token para o email'
-                })
-            }
-
-            return res.json({
-                message: "Token enviado com sucesso. Verifique seu email"
-            });
-        });
-
-
-    } catch (err) {
-        console.log(err);
-        res.status(400).json({
-            error: 'Erro ao tentar trocar a senha, tente novamente.'
-        });
-    }
-});;
-
-router.post('/resete_senha', async(req, res) => {
-
-    console.log(req.body);
-
-    const {
-        email,
-        token,
-        senha
-    } = req.body;
-
-    try {
-        const user = await User.findOne({
-                email
-            })
-            .select('+tokenReseteSenha expiresReseteSenha');
-
-        if (!user) {
-            return res.status(400).json({
-                error: 'Usuário não encontrado.'
-            });
-        }
-
-        if (token !== user.tokenReseteSenha) {
-            return res.status(400).json({
-                error: 'Token inválido.'
-            });
-
-        }
-
-        const now = new Date();
-
-        if (now > user.expiresReseteSenha) {
-            return res.status(400).json({
-                error: 'Token expirado. Por favor, gere um novo.'
-            });
-        }
-
-        user.senha = senha;
-
-        await user.save();
-
-        res.json({
-            error: "Senha alterada com sucesso"
-        });
-
-    } catch (err) {
-        res.status(400).json({
-            error: 'Erro ao tentar trocar a senha, tente novamente.'
-        })
-    }
-
 });
 
 module.exports = app => app.use('/auth', router);

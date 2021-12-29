@@ -23,24 +23,6 @@ router.get('/item/promocao', async (req, res) => {
             promocional: true
         })
 
-        item.forEach(item => {
-            obj.push({
-                "_id": item._id,
-                "nome": item.nome,
-                "tipo": item.tipo,
-                "quantidade": item.quantidade,
-                "valor": item.valor,
-                "estoque": item.estoque,
-                "promocional": item.promocional,
-                "favorito": item.favorito,
-                "capacidade": item.capacidade,
-                "description": "Esse item é muit bom, compra ae!!!",
-                "marca": item.marca,
-                "avaliacao": item.avaliacao,
-                "image": item.image
-            })
-        })
-
         return res.status(200).json({
             item: item,
         })
@@ -58,26 +40,10 @@ router.get('/item/popular', async (req, res) => {
 
         const obj = []
 
-        const item = await Item.find().sort({total_vendido: -1}).limit(10)
-
-        item.forEach(item => {
-            obj.push({
-                "_id": item._id,
-                "image": item.image,
-                "estoque": item.estoque,
-                "promocional": item.promocional,
-                "nome": item.nome,
-                "tipo": item.tipo,
-                "quantidade": item.quantidade,
-                "valor": item.valor,
-                "marca": item.marca,
-                "avaliacao": item.avaliacao,
-                "description": "Esse item é muit bom, compra ae!!!"
-            })
-        })
+        const item = await Item.find().sort({ total_vendido: -1 }).limit(10)
 
         return res.status(200).json({
-            item: obj,
+            item: item,
         })
 
     } catch (err) {
@@ -137,7 +103,7 @@ router.get('/item/set_favorite', async (req, res) => {
             promocional: true
         })
 
-        item.forEach(item => {
+        /* item.forEach(item => {
             obj.push({
                 "_id": item._id,
                 "image": item.image.url,
@@ -151,10 +117,10 @@ router.get('/item/set_favorite', async (req, res) => {
                 "avaliacao": item.avaliacao,
                 "description": "Esse item é muit bom, compra ae!!!"
             })
-        })
+        }) */
 
         return res.status(200).json({
-            item: obj,
+            item: item,
         })
 
     } catch (err) {
@@ -179,7 +145,6 @@ router.get('/item/:type', async (req, res) => {
         let item = []
 
         if (type == "all") {
-
             item = await Item.find()
         } else {
             item = await Item.find({
@@ -187,7 +152,7 @@ router.get('/item/:type', async (req, res) => {
             })
         }
 
-        const obj = []
+        /* const obj = []
 
         item.forEach(item => {
             obj.push({
@@ -203,10 +168,10 @@ router.get('/item/:type', async (req, res) => {
                 "avaliacao": item.avaliacao,
                 "description": "Esse item é muito bom, compra ae!!!"
             })
-        })
+        }) */
 
         return res.status(200).json({
-            item: obj,
+            item: item,
         })
 
 

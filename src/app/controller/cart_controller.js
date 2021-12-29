@@ -24,21 +24,21 @@ router.post('/create/:user', async (req, res) => {
             user
         } = req.params
 
-        console.log(user);
+        console.log("user", user);
 
         const {
             cartItem,
             address
         } = req.body
 
-        console.log(prettyFormat(cartItem));
+        console.log("Cart", cartItem);
 
         let itens = [];
 
         cartItem.forEach(item => {
             itens.push({
-                item: item.item._id,
-                quantity: item.quantity
+                item: item._id,
+                quantity: item.qtd
             })
         });
 

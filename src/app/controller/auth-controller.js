@@ -14,7 +14,7 @@ function generateToken(params = {}) {
     })
 }
 
-router.post('/register', multer(multerConfig).single('file'), async (req, res) => {
+router.post('/register', multer(multerConfig).single('file'), async(req, res) => {
 
     try {
 
@@ -33,12 +33,13 @@ router.post('/register', multer(multerConfig).single('file'), async (req, res) =
             cep,
             bairro,
             numero,
-            rua
+            rua,
+            cpf
         } = req.body;
 
         if (await User.findOne({
-            email
-        })) {
+                email
+            })) {
             return res.status(400).json({
                 error: 'Este e-mail ja foi utilizado.'
             });
@@ -58,7 +59,8 @@ router.post('/register', multer(multerConfig).single('file'), async (req, res) =
                 size,
                 key,
                 url
-            }
+            },
+            cpf
         });
 
         user.senha = undefined;
@@ -79,7 +81,7 @@ router.post('/register', multer(multerConfig).single('file'), async (req, res) =
     }
 });
 
-router.post('/authenticate', async (req, res) => {
+router.post('/authenticate', async(req, res) => {
 
     try {
 

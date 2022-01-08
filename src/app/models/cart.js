@@ -1,15 +1,3 @@
-/**
-    * @description      : 
-    * @author           : Danilo
-    * @group            : 
-    * @created          : 03/05/2021 - 17:19:43
-    * 
-    * MODIFICATION LOG
-    * - Version         : 1.0.0
-    * - Date            : 03/05/2021
-    * - Author          : Danilo
-    * - Modification    : 
-**/
 const {
     Double
 } = require('bson');
@@ -19,13 +7,23 @@ require('dotenv').config();
 const CartSchema = new mongoose.Schema({
 
     cartItem: [{
-        item: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Item"
+        data_order: {
+            type: Date,
+            default: Date.now
         },
-        quantity: {
-            type: Number
-        }
+        order_status: {
+            type: String,
+            default: "Pedido Efetuado"
+        },
+        order: [{
+            item: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Item"
+            },
+            quantity: {
+                type: Number
+            }
+        }]
     }],
     address: {
         cep: {
@@ -48,7 +46,11 @@ const CartSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
 
 });
 

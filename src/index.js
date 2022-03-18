@@ -10,6 +10,7 @@ const swaggerUI = require('swagger-ui-express')
 const swaggerDocument = require('./swaager.json');
 
 const SERVER_PORT = Number(process.env.SERVER_PORT || 5000)
+
 let host = `localhost:${SERVER_PORT}`;
 let _schemas = "http"
 

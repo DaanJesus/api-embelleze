@@ -22,7 +22,7 @@
     "express": "^4.17.1",
     "express-swagger-generator": "^1.1.17",
     "fcm-node": "^1.6.1",
-    "firebase": "^9.6.5",
+    "firebase": "^9.7.0",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.16.0",
     "fs": "0.0.1-security",

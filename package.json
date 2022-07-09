@@ -11,7 +11,7 @@
   "author": "Daan Oliveira",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.828.0",
+    "aws-sdk": "^2.1157.0",
     "axios": "^0.25.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",

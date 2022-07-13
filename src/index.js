@@ -25,10 +25,10 @@ mongoose.connect(process.env.URL_MONGO, {
     useCreateIndex: true,
 }).then(
     () => {
-        console.log("Success connect to: forSaleDatabase", host);
+        console.log("Success connect to: forSaleDatabase ", host);
     },
     err => {
-        console.log("Error connect to: forSaleDatabase" + err);
+        console.log("Error connect to: forSaleDatabase " + err);
     }
 );
 

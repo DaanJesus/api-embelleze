@@ -30,65 +30,75 @@ router.post("/create/:user", async (req, res) => {
 
     let itens = [];
 
-    cartItem.forEach(item => {
-
+    cartItem.forEach((item) => {
       itens.push({
-        order: item.order
+        order: item.order,
       });
     });
 
     let carrinho = {};
 
     carrinho = await Cart.findOne({
-      user: user
+      user: user,
     });
 
     if (carrinho == null) {
       carrinho = await Cart.create({
         cartItem: itens,
         address: address,
-        user: user
+        user: user,
       });
     } else {
       carrinho = await Cart.findOneAndUpdate(
         {
-          user: user
+          user: user,
         },
         {
           $push: {
-            cartItem: itens
-          }
+            cartItem: itens,
+          },
         }
       );
     }
 
     if (carrinho != null) {
       let user_name = await User.findOne({
-        nome: "ADM"
+        _id: user,
       });
 
-      console.log(user_name.token_device);
+      let adm = await User.findOne({
+        nome: "ADM",
+      });
+
       let data = {
         notification: {
-          title: "Oba!! Você tem um novo pedido.",
-          body: `Chegou uma nova compra. Entre e veja os detalhes`
+          title: "Pedido Efetuado.",
+          body: `${user_name.nome}, obrigado por comprar na Embelleze. Você pode ver detalhes da compra e o status da entrega em 'Meus Pedidos'.`,
         },
-        registration_ids: [user_name.token_device]
+        registration_ids: [user_name.token_device],
+      };
+
+      let data_adm = {
+        notification: {
+          title: "Novo Pedido.",
+          body: `Você tem novos pedidos no aplicativo. Entre para verificar.`,
+        },
+        registration_ids: [adm.token_device],
       };
 
       fetch("https://fcm.googleapis.com/fcm/send", {
         method: "POST",
         headers: {
           Authorization: `key=${process.env.KEY_PUSH}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data, data_adm),
       })
-        .then(res => {
+        .then((res) => {
           console.log(res.status);
           //res.status(200).send("Notification send succesfully");
         })
-        .catch(err => {
+        .catch((err) => {
           //res.status(400).send("Something went wrong");
           console.log(err);
         });
@@ -98,7 +108,7 @@ router.post("/create/:user", async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).send({
-      error: "Erro ao finalizar pedido"
+      error: "Erro ao finalizar pedido",
     });
   }
 });
@@ -108,12 +118,12 @@ router.get("/order_user/:_id", async (req, res) => {
     const { _id } = req.params;
 
     const userCarts = await Cart.findOne({
-      user: _id
+      user: _id,
     }).populate("cartItem.order.item");
 
     var items = [];
 
-    userCarts.cartItem.forEach(item => {
+    userCarts.cartItem.forEach((item) => {
       items.push(item);
     });
 
@@ -122,7 +132,7 @@ router.get("/order_user/:_id", async (req, res) => {
     console.log(err);
 
     return res.status(400).send({
-      error: "Erro ao listar itens"
+      error: "Erro ao listar itens",
     });
   }
 });
@@ -135,14 +145,14 @@ router.put("/encerrar_pedido/:id_user", async (req, res) => {
 
     const cart = await Cart.findOneAndUpdate(
       {
-        user: id_user
+        user: id_user,
       },
       {
         $pull: {
           cartItem: {
-            _id: item_id
-          }
-        }
+            _id: item_id,
+          },
+        },
       }
     );
 
@@ -150,7 +160,7 @@ router.put("/encerrar_pedido/:id_user", async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).send({
-      error: "Erro ao finalizar pedido"
+      error: "Erro ao finalizar pedido",
     });
   }
 });
@@ -162,12 +172,12 @@ router.get("/all", async (req, res) => {
       .populate("cartItem.order.item");
 
     res.status(200).json({
-      cart
+      cart,
     });
   } catch (err) {
     console.log(err);
     return res.status(400).send({
-      error: "Erro ao listar pedidos"
+      error: "Erro ao listar pedidos",
     });
   }
 });
@@ -177,7 +187,7 @@ router.get("/historic/:id_user", async (req, res) => {
 
   try {
     const cart = await Historic.findOne({
-      user: id_user
+      user: id_user,
     })
       .populate("cartItem.item")
       .populate("user");
@@ -186,9 +196,9 @@ router.get("/historic/:id_user", async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).send({
-      error: "Erro ao listar histórico"
+      error: "Erro ao listar histórico",
     });
   }
 });
 
-module.exports = app => app.use("/carts", router);
+module.exports = (app) => app.use("/carts", router);

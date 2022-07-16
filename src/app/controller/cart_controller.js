@@ -9,7 +9,6 @@ const fetch = require("cross-fetch");
 //models
 const Cart = require("../models/cart");
 const User = require("../models/user");
-const Historic = require("../models/historic");
 const authMiddleware = require("../middleware/auth");
 
 //router
@@ -178,25 +177,6 @@ router.get("/all", async (req, res) => {
     console.log(err);
     return res.status(400).send({
       error: "Erro ao listar pedidos",
-    });
-  }
-});
-
-router.get("/historic/:id_user", async (req, res) => {
-  const { id_user } = req.params;
-
-  try {
-    const cart = await Historic.findOne({
-      user: id_user,
-    })
-      .populate("cartItem.item")
-      .populate("user");
-
-    res.json(cart);
-  } catch (err) {
-    console.log(err);
-    return res.status(400).send({
-      error: "Erro ao listar histórico",
     });
   }
 });

@@ -48,6 +48,7 @@ router.post("/create/:user", async (req, res) => {
         user: user,
       });
     } else {
+
       carrinho = await Cart.findOneAndUpdate(
         {
           user: user,
@@ -66,11 +67,11 @@ router.post("/create/:user", async (req, res) => {
       });
 
       let adm = await User.findOne({
-        nome: "ADM",
+        nome: "ADMARIO",
       });
 
       let data = {
-        notification: {
+        data: {
           title: "Pedido Efetuado.",
           body: `${user_name.nome}, obrigado por comprar na Embelleze. Você pode ver detalhes da compra e o status da entrega em 'Meus Pedidos'.`,
         },
@@ -78,7 +79,7 @@ router.post("/create/:user", async (req, res) => {
       };
 
       let data_adm = {
-        notification: {
+        data: {
           title: "Novo Pedido.",
           body: `Você tem novos pedidos no aplicativo. Entre para verificar.`,
         },
